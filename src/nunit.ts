@@ -92,7 +92,7 @@ export class TestResult {
 
 function sanitizePath(filename: string): string {
   if (filename.startsWith("/github/workspace"))
-    return relative("/github/workspace", filename);
+    return relative("/github/workspace", filename).replace(/\\/g, "/");
   else return relative(process.cwd(), filename).replace(/\\/g, "/");
 }
 
