@@ -7,6 +7,7 @@ import {
 } from "../src/nunit";
 import { parseStringPromise } from "xml2js";
 import { promises as fs } from "fs";
+import * as os from "os";
 
 test("parse TestCase", async () => {
   const data = `
@@ -63,7 +64,7 @@ test("parse Results", async () => {
   expect(annotation.title).toBe(
     "Failed test ServerUpdate in Mirror.Tests.NetworkIdentityTests"
   );
-  expect(annotation.message).toBe("Expected: 1\n  But was:  0");
+  expect(annotation.message).toBe("Expected: 1" + os.EOL + "  But was:  0");
   expect(annotation.annotation_level).toBe("failure");
 });
 
