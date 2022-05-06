@@ -42,7 +42,6 @@ async function run(): Promise<void> {
     }
 
     const pr = context.payload.pull_request;
-    console.log(`errors = ${numFailures}`);
     console.log(JSON.stringify(results.annotations));
     await octokit.checks.create({
       head_sha: (pr && pr["head"] && pr["head"].sha) || context.sha,
