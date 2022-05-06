@@ -59,7 +59,7 @@ async function run(): Promise<void> {
       },
     });
   } catch (error) {
-    setFailed(error.message);
+    setFailed(error);
   }
 }
 
