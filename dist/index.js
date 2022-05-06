@@ -2225,15 +2225,15 @@ const glob_1 = __webpack_require__(281);
 const fs_1 = __webpack_require__(747);
 const path_1 = __webpack_require__(622);
 class Annotation {
-    constructor(path, start_line, end_line, start_column, end_column, annotation_level, title, message, raw_details) {
+    constructor(annotation_level, path, start_line, end_line, message, title, start_column, end_column, raw_details) {
+        this.annotation_level = annotation_level;
         this.path = path;
         this.start_line = start_line;
         this.end_line = end_line;
+        this.message = message;
+        this.title = title;
         this.start_column = start_column;
         this.end_column = end_column;
-        this.annotation_level = annotation_level;
-        this.title = title;
-        this.message = message;
         this.raw_details = raw_details;
     }
 }
@@ -2280,7 +2280,7 @@ function testCaseAnnotation(testcase) {
     const stacktrace = "stack-trace" in testcase.failure
         ? testcase.failure["stack-trace"].substring(0, 65536)
         : "";
-    return new Annotation(sanitizedFilename, lineno, lineno, 0, 0, "failure", `Failed test ${methodname} in ${classname}`, message, stacktrace);
+    return new Annotation("failure", sanitizedFilename, lineno, lineno, message, `Failed test ${methodname} in ${classname}`);
 }
 exports.testCaseAnnotation = testCaseAnnotation;
 class TestResult {
@@ -5325,7 +5325,6 @@ async function run() {
             }
         }
         const pr = github_1.context.payload.pull_request;
-        console.log(`errors = ${numFailures}`);
         console.log(JSON.stringify(results.annotations));
         await octokit.checks.create({
             head_sha: (pr && pr["head"] && pr["head"].sha) || github_1.context.sha,
