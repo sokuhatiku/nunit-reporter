@@ -63,7 +63,16 @@ async function run(): Promise<void> {
       output: {
         title,
         summary,
-        annotations: results.annotations,
+        annotations: results.annotations.map((a) => {
+          return {
+            path: a.path,
+            start_line: a.start_line,
+            end_line: a.end_line,
+            annotation_level: a.annotation_level,
+            title: a.title,
+            message: a.message,
+          };
+        }),
         text: details,
       },
       ...context.repo,
