@@ -13,9 +13,21 @@ async function run(): Promise<void> {
     const accessToken = getInput("access-token");
     const title = getInput("reportTitle");
 
-    const results = await readResults(path);
-
     const octokit = new GitHub(accessToken);
+    const pr = context.payload.pull_request;
+
+    const createResponse = await octokit.checks.create({
+      head_sha: (pr && pr["head"] && pr["head"].sha) || context.sha,
+      name: `Tests Report: ${title}`,
+      status: "in_progress",
+      output: {
+        title: title,
+        summary: "",
+      },
+      ...context.repo,
+    });
+
+    const results = await readResults(path);
 
     const summary =
       results.failed > 0
@@ -41,13 +53,10 @@ async function run(): Promise<void> {
       }
     }
 
-    const pr = context.payload.pull_request;
     console.log(JSON.stringify(results.annotations));
-    await octokit.checks.create({
-      head_sha: (pr && pr["head"] && pr["head"].sha) || context.sha,
-      name: `Tests Report: ${title}`,
-      owner: context.repo.owner,
-      repo: context.repo.repo,
+
+    const updateResponse = await octokit.checks.update({
+      check_run_id: createResponse.data.id,
       status: "completed",
       conclusion:
         results.failed > 0 || results.passed === 0 ? "failure" : "success",
@@ -57,6 +66,7 @@ async function run(): Promise<void> {
         annotations: results.annotations.slice(0, numFailures),
         text: details,
       },
+      ...context.repo,
     });
   } catch (error) {
     setFailed(error);
