@@ -5400,9 +5400,9 @@ async function run() {
             status: "in_progress",
             output: {
                 title: title,
-                summary: ''
+                summary: "",
             },
-            ...github_1.context.repo
+            ...github_1.context.repo,
         });
         const results = await nunit_1.readResults(path);
         const summary = results.failed > 0
@@ -5433,10 +5433,10 @@ async function run() {
             output: {
                 title,
                 summary,
-                annotations: results.annotations.slice(0, numFailures),
+                annotations: results.annotations,
                 text: details,
             },
-            ...github_1.context.repo
+            ...github_1.context.repo,
         });
     }
     catch (error) {

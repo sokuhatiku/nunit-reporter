@@ -63,7 +63,7 @@ async function run(): Promise<void> {
       output: {
         title,
         summary,
-        annotations: results.annotations.slice(0, numFailures),
+        annotations: results.annotations,
         text: details,
       },
       ...context.repo,
